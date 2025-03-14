@@ -67,7 +67,7 @@ library(spsComps)
 
 #------ Read main submission Data from ODK Central-------
 
-# jscode <- "shinyjs.closeWindow = function() { window.close(); }"
+#jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
 
 url <- "https://nhlmmr-icap-vl.org/v1/projects/11/forms/VL_SCORECARD_1/submissions.csv"
@@ -76,8 +76,7 @@ GET(url, authenticate("nhlmmr.qa@gmail.com", "Nhl@#!1005x1005"), content_type("t
 data <- read.csv('temp.csv')
 
 
-#hide the error/practice records
-
+#--- hide the error/practice records ---
 data <- subset(data,
 
                KEY!='uuid:dc452d94-2017-44cd-9291-1d756fb6c751' &
@@ -375,15 +374,11 @@ data <- data %>%
          sec9_total = group_9_0_INTERNAL_QUALITY_AUDITS.calculate_Q9
          )
 
-
-
-
 #----removed records (testing data and incorrect data )-------
 data <- subset(data,
                  KEY!= 'uuid:aea31654-2b8a-45c2-87b1-b027beeadb9d' &
                  KEY!= 'uuid:29b8c32e-7a6b-4773-bff0-8354bb5af3a9'
 )
-
 
 #-----reading user account excel sheet----
 account <- read_xlsx("accounts.xlsx")
@@ -1259,10 +1254,6 @@ server <- function(input,output,session) {
     
     
   })
-  
-  
-
-  
   
   
   
@@ -2152,7 +2143,7 @@ server <- function(input,output,session) {
                          choices = c("ALL",unique(x$lab_name))) }
     
     
-    ## phl central
+    ### phl_central###
     
     else if(input$ti_user_name_basic == "phl_central" &
        input$platform == "ALL" &
@@ -5447,7 +5438,7 @@ server <- function(input,output,session) {
         wh_Qty_other = paste(G4_Wh_Qty_base_other, collapse = ", "),
         How_often = paste(G4_How_often, collapse = ", "),
         Comments = paste(G4_Comments, collapse = ", "),
-        print(wh_Qty),
+        # print(wh_Qty),
         
         Q1 = sum(Q4_1),
         Q2 = sum(Q4_2),
@@ -5476,24 +5467,10 @@ server <- function(input,output,session) {
       
       tags$thead(
         tags$tr( #Section Level1 Header
-          tags$th(colspan = 4, style = "width:50%; text-align: center;
+          tags$th(colspan = 4, style = "width:100%; text-align: center;
             vertical-align: middle; background-color:#002D62; color:white;", "SECTION 4: PROCUREMENT AND INVENTORY(Yes = 1, Partial = 0.5, No = 0)")
         ),
-        ##New request Table
-        # tags$tr( #Table Header
-        #   tags$th( style = " text-align: center;
-        #     vertical-align: middle; background-color:#50C878; color:white;", #background-color:#50C878 << Green
-        #            "No."),
-        #   tags$th( style = " text-align: center;
-        #     vertical-align: middle; background-color:#50C878; color:white;", 
-        #            "Question "),
-          # tags$th( style = "text-align: center;
-          #   vertical-align: middle; background-color:#50C878; color:white;", 
-          #          "Score"),
-          # tags$th( style = " text-align: center;
-          #   vertical-align: middle; background-color:#50C878; color:white;", 
-          #          "Comment")
-        # )
+
       ), # end of tags$thead
       
       tags$tbody(
@@ -5502,7 +5479,7 @@ server <- function(input,output,session) {
           tags$td(paste(df_final$Who_Decide)),
           tags$td("Other, specify__: "),
           tags$td(paste(df_final$Who_Decide_other)),
-          print(df_final$Who_Decide)
+          # print(df_final$Who_Decide)
         ),
         tags$tr( style = "background-color:#c1db9b;",
           tags$td("What is the quantification based on: "),
@@ -5516,95 +5493,7 @@ server <- function(input,output,session) {
           tags$td("Comments: "),
           tags$td(paste(df_final$Comments))
         ),
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.1"),
-        #          tags$td(
-        #            "Is there a SOP for inventory control?"),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q1, "out of 1")),
-        #          tags$td(
-        #            df_final$C1)
-        # ),
-        # 
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.2"),
-        #          tags$td(
-        #            "Are SOPs in place and followed for receipt, inspection and storage of reagent/supplies?"),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q2, "out of 1")),
-        #          tags$td(
-        #            df_final$C2)
-        # ),
-        # 
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.3"),
-        #          tags$td(
-        #            "Are reagents/supplies labeled with the date received and initials?"),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q3, "out of 1")),
-        #          tags$td(
-        #            df_final$C3)
-        # ),
-        # 
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.4"),
-        #          tags$td(
-        #            "Are all reagents/supplies, currently in use, within their expiration period?"),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q4, "out of 1")),
-        #          tags$td(
-        #            df_final$C4)
-        # ),
-        # 
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.5"),
-        #          tags$td(
-        #            "Are SOPs for disposal of reagents and consumables in place and followed?"),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q5, "out of 1")),
-        #          tags$td(
-        #            df_final$C5)
-        # ),
-        # 
-        # 
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.6"),
-        #          tags$td(
-        #            "Have all consumables/supplies been in stock during the past 6 months? If no or partial record number of stock outs in comment section."),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q6, "out of 1")),
-        #          tags$td(
-        #            df_final$C6)
-        # ),
-        # 
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.7"),
-        #          tags$td(
-        #            "Have all reagents been in stock during the past 6 months? If no or partial record the number of stock outs in comment section."),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q7, "out of 1")),
-        #          tags$td(
-        #            df_final$C7)
-        # ),
-        # 
-        # 
-        # tags$tr( style = "border-top: thin solid;",
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  "4.8"),
-        #          tags$td(
-        #            "Are reagents/supplies appropriate for molecular testing (e.g. powder-free gloves, filtered tips, RNAse/DNAse-free)?"),
-        #          tags$td(style = "background-color:#c1db9b; ",
-        #                  paste(df_final$Q8, "out of 1")),
-        #          tags$td(
-        #            df_final$C8)
-        # )
+
       ), # end of tbody
       
       ##Section4 Table2
@@ -5623,7 +5512,7 @@ server <- function(input,output,session) {
           )
         ),
         tags$tr( #Table Header
-          tags$th( style = " text-align: center;
+          tags$th( colspan = 4, style = "width:100%; text-align: center;
             vertical-align: middle; background-color:#50C878; color:white;", #background-color:#50C878 << Green
                    "No."),
           tags$th( style = " text-align: center;
@@ -6676,21 +6565,18 @@ server <- function(input,output,session) {
                  State_Region = state_region,
                  Township = township,
                  Affiliation = affiliation,
-                 Assessment_Date = format(assessment_date,"%d-%b-%y") ,
+                 Assessment_Date = format(assessment_date,"%d-%b-%y"),
+                 #Platform = group_part1.Type_of_VL_Platform,
                  Start_Time = group_part1.start_time,
                  End_Time = last_page.end_time,
                  # Platform = sub_platform,
-                 
                  Accessor_Name_1= accessor_name_1,
                  Accessor_Name_2= accessor_name_2,
                  First_Assessment = first_assessment,
                  Date_Last_Assessemnt = previous_assessment_date
-                 
-                 
       )
     site <- site %>% group_by(lab_name)%>%
       slice(which(assessment_date == max(assessment_date)))
-    
     
     tags$table(
       style = "width:100%; background-color:#d2e6b5;",
@@ -6715,48 +6601,36 @@ server <- function(input,output,session) {
           tags$td("Affiliation: "),
           tags$td(paste(site$Affiliation))
         ),
-        
         tags$tr( style = "background-color:#c1db9b;",
                  tags$td("State/Region: "),
                  tags$td(paste(site$State_Region)),
                  tags$td("Township: "),
                  tags$td(paste(site$Township))
         ),
-        
-        
-        
         tags$tr( 
           tags$td("Date: "),
           tags$td(paste(site$Assessment_Date)),
           tags$td("Platform:  "),
           tags$td(paste(site$Platform))
-          
-          
         ),
-        
         tags$tr( style = "background-color:#c1db9b;",
                  tags$td("Start Time: "),
                  tags$td(paste(site$Start_Time)),
                  tags$td("End Time: "),
                  tags$td(paste(site$End_Time))
-                 
         ),
-        
         tags$tr(
           tags$td("Accessor Name 1: "),
           tags$td(paste(site$Accessor_Name_1)),
           tags$td("Accessor Name 2: "),
           tags$td(paste(site$Accessor_Name_2))
         ),
-        
         tags$tr(style = "background-color:#c1db9b;",
                 tags$td("First Assessment ?: "),
                 tags$td(paste(site$First_Assessment)),
                 tags$td("If no: Date of last assessment: "),
                 tags$td(paste(site$Date_Last_Assessemnt))
         )
-        
-        
         
       ) #end of table body
     ) # end of table
@@ -7401,93 +7275,110 @@ server <- function(input,output,session) {
   
   ##-----Section 4 GXP report-----
   output$sec4_report_G <- renderUI({
-    
+
     df_final <- df_final()%>%
       filter(lab_name == input$facility )%>%
       filter(platform == "genexpert")%>%
       group_by(lab_name) %>%
       slice(which(assessment_date == max(assessment_date)))
-    
-    df_final <- df_final%>%  group_by(assessment_date, lab_name, platform) %>% #,sub_platform
-      summarise( 
+
+    df_final <- df_final%>%  group_by(assessment_date, lab_name, platform) %>% #, sub_platform
+      summarise(
         Audit_Score = sum(sec4_total),
         Max_Score = sum(sec4_max),
         Score_Percent = round(((sum(sec4_total)/sum(sec4_max))*100), digits = 0),
-        
-        # Who_Decide = paste(G4_Who_Decide, collapse = ", "),
-        # Who_Decide_other = paste(G4_Who_Decide_other, collapse = ", "),
-        # wh_Qty = paste(G4_Wh_Qty_base, collapse = ", "),
-        # wh_Qty_other = paste(G4_Wh_Qty_base_other, collapse = ", "),
-        # How_often = paste(G4_How_often, collapse = ", "),
-        # Comments = paste(G4_Comments, collapse = ", "),
-        #print(wh_Qty),
-        Who_Decide = G4_Who_Decide,
-        Who_Decide_other = G4_Who_Decide_other,
-        wh_Qty = G4_Wh_Qty_base,
-        wh_Qty_other = G4_Wh_Qty_base_other,
-        How_often = G4_How_often,
-        Comments = G4_Comments,
-        
         Q1 = sum(Q4_1),
         Q2 = sum(Q4_2),
         Q3 = sum(Q4_3),
         Q4 = sum(Q4_4),
         Q5 = sum(Q4_5),
         Q6 = sum(Q4_6_G),
-        
-        # Q7 = sum(Q4_7),
-        # Q8 = sum(Q4_8),
-        
+
+              Who_Decide = paste(G4_Who_Decide, collapse = ", "),
+              Who_Decide_other = paste(G4_Who_Decide_other, collapse = ", "),
+              wh_Qty = paste(G4_Wh_Qty_base, collapse = ", "),
+              wh_Qty_other = paste(G4_Wh_Qty_base_other, collapse = ", "),
+              How_often = paste(G4_How_often, collapse = ", "),
+              Comments = paste(G4_Comments, collapse = ", "),
+
         C1 = C4_1,
         C2 = C4_2,
         C3 = C4_3,
         C4 = C4_4,
         C5 = C4_5,
-        
-        C6 = C2_6,
-        # C7 = C2_7,
-        # C8 = C2_8
+
+        C6 = C2_6
+
       )
-    
+
+
     table <-  tags$table(
       style = "width:100%; background-color:#d2e6b5;",
       border = 2,
-      
+
       tags$thead(
-        tags$tr( #Section Level1 Header
-          tags$th(colspan = 4, style = "width:50%; text-align: center;
-            vertical-align: middle; background-color:#002D62; color:white;", "SECTION 4: PROCUREMENT AND INVENTORY(Yes = 1, Partial = 0.5, No = 0)")
-        ),
-      ), # end of tags$thead
+        # SECTION TITLE
+        tags$tr(
+          tags$th(colspan = 4, style = "width:100%; text-align: center;
+  vertical-align: middle; background-color:#002D62; color:white;", "SECTION 4: PROCUREMENT AND INVENTORY(Yes = 1, Partial = 0.5, No = 0)")
+        )
+      ),
       
+      # # PROCUREMENT DETAILS (tbody after first thead row, before score row)
+      # tags$tbody(
+      #   tags$tr(
+      #     tags$td("Who decides quantities of lab reagents/supplies: "),
+      #     tags$td(colspan = 3, paste(df_final$Who_Decide))
+      #   ),
+      #   tags$tr(
+      #     tags$td("Other, specify: "),
+      #     tags$td(colspan = 3, paste(df_final$Who_Decide_other))
+      #   ),
+      #   tags$tr(
+      #     tags$td("What is the quantification based on: "),
+      #     tags$td(colspan = 3, paste(df_final$wh_Qty))
+      #   ),
+      #   tags$tr(
+      #     tags$td("Other, specify: "),
+      #     tags$td(colspan = 3, paste(df_final$wh_Qty_other))
+      #   ),
+      #   tags$tr(
+      #     tags$td("How often are reagents/supplies ordered: "),
+      #     tags$td(colspan = 3, paste(df_final$How_often))
+      #   ),
+      #   tags$tr(
+      #     tags$td("Comments: "),
+      #     tags$td(colspan = 3, paste(df_final$Comments))
+      #   )
+      # ), # END OF PROCUREMENT DETAILS tbody
+      
+      # PROCUREMENT DETAILS as a 4-column table
       tags$tbody(
         tags$tr(
-          tags$td("Who decides/quantities lab reagents/supplies to be procured: "),
+          tags$td(style = "font-weight:bold;", "Who decides quantities of lab reagents/supplies:"),
           tags$td(paste(df_final$Who_Decide)),
-          tags$td("Other, specify_: "),
-          tags$td(paste(df_final$Who_Decide_other)),
-              console.log("Who decides/quantities lab reagents/supplies to be procured: ",df_final$Who_Decide)
-        ),
-        tags$tr( style = "background-color:#c1db9b;",
-                 tags$td("What is the quantification based on: "),
-                 tags$td(paste(df_final$Wh_Qty)),
-                 tags$td("Other, specify__: "),
-                    console.log("What is the quantification based on: ", wh_Qty),
-                 tags$td(paste(df_final$Wh_Qty_other))
+          tags$td(style = "font-weight:bold;", "Other, specify:"),
+          tags$td(paste(df_final$Who_Decide_other))
         ),
         tags$tr(
-          tags$td("How often are reagents/supplies for VL/IVT ordered: "),
-          tags$td(paste(df_final$How_often)),
-          tags$td("Comments: "),
-          tags$td(paste(df_final$Comments))
+          tags$td(style = "background-color:#c1db9b; font-weight:bold;", "What is the quantification based on:"),
+          tags$td(style = "background-color:#c1db9b", paste(df_final$wh_Qty)),
+          tags$td(style = "background-color:#c1db9b; font-weight:bold;", "Other, specify:"),
+          tags$td(style = "background-color:#c1db9b", paste(df_final$wh_Qty_other))
         ),
-      ), # end of tbody
+        tags$tr(
+          tags$td(style = "font-weight:bold;", "How often are reagents/supplies ordered:"),
+          tags$td(paste(df_final$How_often)),
+          tags$td(style = "font-weight:bold;", "Comments:"),
+          tags$td(paste(df_final$Comments))
+        )
+      ), # END OF PROCUREMENT DETAILS tbody
       
-      ##Section4 Table2
       tags$thead(
-        tags$tr( #Section Level2 Header
+        # SECTION SCORE ROW (Second Thead Row, after PROCUREMENT DETAILS)
+        tags$tr(
           tags$th(colspan = 4, style = "width:100%; text-align: center;
-            vertical-align: middle; background-color:#002D62; color:white;", #background-color:#002D62 << Dark-Blue
+  vertical-align: middle; background-color:#002D62; color:white;",
                   paste("SECTION 4 Total Score: ",
                         df_final$Audit_Score,
                         "out of ",
@@ -7495,27 +7386,29 @@ server <- function(input,output,session) {
                         "( ",
                         df_final$Score_Percent,
                         " % )"
-                  )
-          )
+                  ))
         ),
-        tags$tr( #Table Header
+        # QUESTION HEADER ROW
+        tags$tr(
           tags$th( style = " text-align: center;
-            vertical-align: middle; background-color:#50C878; color:white;", #background-color:#50C878 << Green
+  vertical-align: middle; background-color:#50C878; color:white;",
                    "No."),
           tags$th( style = " text-align: center;
-            vertical-align: middle; background-color:#50C878; color:white;", 
+  vertical-align: middle; background-color:#50C878; color:white;",
                    "Question "),
           tags$th( style = "text-align: center;
-            vertical-align: middle; background-color:#50C878; color:white;", 
+  vertical-align: middle; background-color:#50C878; color:white;",
                    "Score"),
           tags$th( style = " text-align: center;
-            vertical-align: middle; background-color:#50C878; color:white;", 
+  vertical-align: middle; background-color:#50C878; color:white;",
                    "Comment")
         )
-      ),
+      ), # end of tags$thead
+
+
       tags$tbody(
         tags$tr( style = "border-top: thin solid;",
-                 tags$td(style = "background-color:#c1db9b; ",
+                 tags$td(style = "background-color:#c1db9b; width: 5%;",  # FIX COLUMN WIDTH
                          "4.1"),
                  tags$td(
                    "Is there a SOP for inventory control?"),
@@ -7524,9 +7417,8 @@ server <- function(input,output,session) {
                  tags$td(
                    df_final$C1)
         ),
-        
         tags$tr( style = "border-top: thin solid;",
-                 tags$td(style = "background-color:#c1db9b; ",
+                 tags$td(style = "background-color:#c1db9b; width: 5%;",  # FIX COLUMN WIDTH
                          "4.2"),
                  tags$td(
                    "Are SOPs in place and followed for receipt, inspection and storage of reagent/supplies?"),
@@ -7535,9 +7427,8 @@ server <- function(input,output,session) {
                  tags$td(
                    df_final$C2)
         ),
-        
         tags$tr( style = "border-top: thin solid;",
-                 tags$td(style = "background-color:#c1db9b; ",
+                 tags$td(style = "background-color:#c1db9b; width: 5%;",  # FIX COLUMN WIDTH
                          "4.3"),
                  tags$td(
                    "Are reagents/supplies labeled with the date received and initials?"),
@@ -7546,9 +7437,8 @@ server <- function(input,output,session) {
                  tags$td(
                    df_final$C3)
         ),
-        
         tags$tr( style = "border-top: thin solid;",
-                 tags$td(style = "background-color:#c1db9b; ",
+                 tags$td(style = "background-color:#c1db9b; width: 5%;",  # FIX COLUMN WIDTH
                          "4.4"),
                  tags$td(
                    "Are all reagents/supplies, currently in use, within their expiration period?"),
@@ -7557,9 +7447,8 @@ server <- function(input,output,session) {
                  tags$td(
                    df_final$C4)
         ),
-        
         tags$tr( style = "border-top: thin solid;",
-                 tags$td(style = "background-color:#c1db9b; ",
+                 tags$td(style = "background-color:#c1db9b; width: 5%;",  # FIX COLUMN WIDTH
                          "4.5"),
                  tags$td(
                    "Are SOPs for disposal of reagents and consumables in place and followed?"),
@@ -7568,165 +7457,21 @@ server <- function(input,output,session) {
                  tags$td(
                    df_final$C5)
         ),
-        
-        
         tags$tr( style = "border-top: thin solid;",
-                 tags$td(style = "background-color:#c1db9b; ",
+                 tags$td(style = "background-color:#c1db9b; width: 5%;",  # FIX COLUMN WIDTH
                          "4.6"),
                  tags$td(
-                   "Have all consumables/supplies been in stock during the past 6 months? If no or partial record number of stock outs in comment section."),
+                   "Have all cartridges/consumables/supplies been in stock during the past 6 months? If no or partial record number of stock outs in comment section."),
                  tags$td(style = "background-color:#c1db9b; ",
                          paste(df_final$Q6, "out of 1")),
                  tags$td(
                    df_final$C6)
-        ),
+        )
+
       ) # end of tbody
-    ) # end of table 
-    
-  })
-  # output$sec4_report_G <- renderUI({
-  #   
-  #   df_final <- df_final()%>%
-  #     filter(lab_name == input$facility )%>%
-  #     filter(platform == "genexpert")%>%
-  #     group_by(lab_name) %>% 
-  #     slice(which(assessment_date == max(assessment_date))) 
-  #   
-  #   df_final <- df_final%>%  group_by(assessment_date, lab_name, platform) %>% #, sub_platform
-  #     summarise( 
-  #       Audit_Score = sum(sec4_total),
-  #       Max_Score = sum(sec4_max),
-  #       Score_Percent = round(((sum(sec4_total)/sum(sec4_max))*100), digits = 0),
-  #       Q1 = sum(Q4_1),
-  #       Q2 = sum(Q4_2),
-  #       Q3 = sum(Q4_3),
-  #       Q4 = sum(Q4_4),
-  #       Q5 = sum(Q4_5),
-  #       Q6 = sum(Q4_6_G),
-  #       
-  #       
-  #       C1 = C4_1,
-  #       C2 = C4_2,
-  #       C3 = C4_3,
-  #       C4 = C4_4,
-  #       C5 = C4_5,
-  #       
-  #       C6 = C2_6
-  #      
-  #     )
-  #   
-  #   
-  #   table <-  tags$table(
-  #     style = "width:100%; background-color:#d2e6b5;",
-  #     border = 2,
-  #     
-  #     tags$thead(
-  #       tags$tr(
-  #         tags$th(colspan = 4, style = "width:100%; text-align: center;
-  # vertical-align: middle; background-color:#002D62; color:white;", "SECTION 4: PROCUREMENT AND INVENTORY(Yes = 1, Partial = 0.5, No = 0)")
-  #       ),
-  #       tags$tr(
-  #         tags$th(colspan = 4, style = "width:100%; text-align: center;
-  # vertical-align: middle; background-color:#002D62; color:white;", 
-  #                 paste("SECTION 4 Total Score: ",
-  #                       df_final$Audit_Score,
-  #                       "out of ",
-  #                       df_final$Max_Score,
-  #                       "( ",
-  #                       df_final$Score_Percent,
-  #                       " % )"
-  #                 ))
-  #       ),
-  #       tags$tr(
-  #         tags$th( style = " text-align: center;
-  # vertical-align: middle; background-color:#50C878; color:white;", 
-  #                  "No."),
-  #         tags$th( style = " text-align: center;
-  # vertical-align: middle; background-color:#50C878; color:white;", 
-  #                  "Question "),
-  #         tags$th( style = "text-align: center;
-  # vertical-align: middle; background-color:#50C878; color:white;", 
-  #                  "Score"),
-  #         tags$th( style = " text-align: center;
-  # vertical-align: middle; background-color:#50C878; color:white;", 
-  #                  "Comment")
-  #       )
-  #     ), # end of tags$thead
-  #     
-  #     
-  #     tags$tbody(
-  #       tags$tr( style = "border-top: thin solid;",
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        "4.1"),
-  #                tags$td(
-  #                  "Is there a SOP for inventory control?"),
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        paste(df_final$Q1, "out of 1")),
-  #                tags$td(
-  #                  df_final$C1)
-  #       ),
-  #       
-  #       tags$tr( style = "border-top: thin solid;",
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        "4.2"),
-  #                tags$td(
-  #                  "Are SOPs in place and followed for receipt, inspection and storage of reagent/supplies?"),
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        paste(df_final$Q2, "out of 1")),
-  #                tags$td(
-  #                  df_final$C2)
-  #       ),
-  #       
-  #       tags$tr( style = "border-top: thin solid;",
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        "4.3"),
-  #                tags$td(
-  #                  "Are reagents/supplies labeled with the date received and initials?"),
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        paste(df_final$Q3, "out of 1")),
-  #                tags$td(
-  #                  df_final$C3)
-  #       ),
-  #       
-  #       tags$tr( style = "border-top: thin solid;",
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        "4.4"),
-  #                tags$td(
-  #                  "Are all reagents/supplies, currently in use, within their expiration period?"),
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        paste(df_final$Q4, "out of 1")),
-  #                tags$td(
-  #                  df_final$C4)
-  #       ),
-  #       
-  #       tags$tr( style = "border-top: thin solid;",
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        "4.5"),
-  #                tags$td(
-  #                  "Are SOPs for disposal of reagents and consumables in place and followed?"),
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        paste(df_final$Q5, "out of 1")),
-  #                tags$td(
-  #                  df_final$C5)
-  #       ),
-  #       
-  #       
-  #       tags$tr( style = "border-top: thin solid;",
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        "4.6"),
-  #                tags$td(
-  #                  "Have all cartridges/consumables/supplies been in stock during the past 6 months? If no or partial record number of stock outs in comment section."),
-  #                tags$td(style = "background-color:#c1db9b; ",
-  #                        paste(df_final$Q6, "out of 1")),
-  #                tags$td(
-  #                  df_final$C6)
-  #       )
-  #       
-  #       
-  #     ) # end of tbody
-  #   ) # end of table 
-  #   
-  # })  
+    )# end of table
+# print("break")
+  })    
   
   
   ##-----Section 5 GXP report-----
